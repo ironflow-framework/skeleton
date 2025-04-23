@@ -3,12 +3,13 @@
   "description": "Skeleton pour démarrer un nouveau projet avec IronFlow Framework",
   "type": "project",
   "require": {
-    "ironflow/framework": "^1.0",
+    "ironflow/framework": "^4.0",
     "php": "^8.2"
   },
   "autoload": {
     "psr-4": {
-      "App\\": "app/"
+      "App\\": "app/",
+      "Database\\": "database/"
     }
   },
   "autoload-dev": {
