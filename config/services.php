@@ -12,9 +12,5 @@ return [
       IronFlow\Providers\CacheServiceProvider::class,
       IronFlow\Providers\TranslationServiceProvider::class,
 
-      // Providers de fonctionnalités
-      IronFlow\Channel\ChannelServiceProvider::class,
-      IronFlow\Services\AI\AIServiceProvider::class,
-      IronFlow\Services\Payment\PaymentServiceProvider::class,
    ],
 ];
