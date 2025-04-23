@@ -3,7 +3,7 @@
   "description": "Skeleton pour démarrer un nouveau projet avec IronFlow Framework",
   "type": "project",
   "require": {
-    "ironflow/framework": "^4.0",
+    "ironflow/framework": "^2.0",
     "php": "^8.2"
   },
   "autoload": {
