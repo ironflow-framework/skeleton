@@ -10,9 +10,9 @@
     }
   ],
   "require": {
-    "ironflow/framework": "^1.0",
+    "ironflow/framework": "^1",
     "php": "^8.2",
-    "phpunit/phpunit": "^10.0"
+    "phpunit/phpunit": "^10"
   },
   "autoload": {
     "psr-4": {
