@@ -12,7 +12,7 @@
 
 </div>
 
-## 📋 Table des matières
+## Table des matières
 
 - [Présentation](#présentation)
 - [Fonctionnalités](#fonctionnalités)
@@ -46,7 +46,7 @@ IronFlow est un framework PHP moderne, performant et modulaire, conçu pour simp
 - Support des WebSockets
 - Panneau d'administration intégré (CraftPanel)
 
-## 🌟 Fonctionnalités Clés
+## Fonctionnalités Clés
 
 ### Performance
 
@@ -76,7 +76,7 @@ IronFlow est un framework PHP moderne, performant et modulaire, conçu pour simp
 - Hooks et événements personnalisables
 - Support multi-drivers
 
-## 📋 Prérequis Système
+## Prérequis Système
 
 - PHP 8.2 ou supérieur
 - Composer 2.0+
