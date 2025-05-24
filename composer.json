@@ -29,16 +29,12 @@
     "setup-directories": [
       "@php vendor/ironflow/framework/src/scripts/setup_directories.php"
     ],
-    "check-os-and-chmod": [
-      "@php vendor/ironflow/framework/src/scripts/check_os_and_chmod.php"
-    ],
     "run-npm-install": [
       "bash vendor/ironflow/framework/scripts/run_npm_install.sh"
     ],
     "post-create-project-cmd": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "@setup-directories",
-      "@check-os-and-chmod",
       "@run-npm-install"
     ],
   "test": "phpunit"
