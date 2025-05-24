@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use IronFlow\Database\Factory;
+use IronFlow\Database\Factories\Factory;
 use App\Models\User;
 
 class UserFactory extends Factory

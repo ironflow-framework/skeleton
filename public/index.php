@@ -29,8 +29,16 @@ if (version_compare(PHP_VERSION, MINIMUM_PHP_VERSION, '<')) {
 // Définition du chemin de base de l'application
 define('BASE_PATH', dirname(__DIR__));
 
+// Définition de la fonction helper base_path()
+if (!function_exists('base_path')) {
+   function base_path(string $path = ''): string
+   {
+      return BASE_PATH . ($path ? '/' . ltrim($path, '/') : '');
+   }
+}
+
 // Chargement de l'autoloader de Composer
-require_once BASE_PATH . '/vendor/autoload.php';
+require_once base_path('vendor/autoload.php');
 
 // Chargement des variables d'environnement
 $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
@@ -73,12 +81,12 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Création du répertoire de logs si nécessaire
-if (!is_dir(BASE_PATH . '/storage/logs')) {
-   mkdir(BASE_PATH . '/storage/logs', 0755, true);
+if (!is_dir(base_path('storage/logs'))) {
+   mkdir(base_path('storage/logs'), 0755, true);
 }
 
 // Vérification des permissions du fichier de log
-$logFile = BASE_PATH . '/storage/logs/php_errors.log';
+$logFile = base_path('storage/logs/php_errors.log');
 if (!file_exists($logFile)) {
    touch($logFile);
 }
@@ -87,7 +95,7 @@ chmod($logFile, 0666);
 try {
    // Démarrage de l'application
    error_log("Chargement de l'application...");
-   $app = require BASE_PATH . '/bootstrap/app.php';
+   $app = require base_path('/bootstrap/app.php');
    error_log("Application chargée, démarrage...");
    $app->run();
 } catch (\Throwable $e) {
