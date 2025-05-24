@@ -96,7 +96,7 @@ IronFlow est un framework PHP moderne, performant et modulaire, conçu pour simp
 
 ```bash
 # Création du projet
-composer create-project ironflow/framework mon-projet
+composer create-project ironflow/skeleton mon-projet
 
 # Configuration
 cd mon-projet
@@ -117,7 +117,7 @@ chmod -R 777 storage bootstrap/cache
 1. **Cloner le repository**:
 
    ```bash
-   git clone https://github.com/ironflow/framework.git
+   git clone https://github.com/ironflow-framework/skeleton.git
    cd framework
    ```
 
@@ -150,13 +150,13 @@ mon-projet/
 │   ├── Controllers/       # Contrôleurs
 │   ├── Models/           # Modèles
 │   ├── Middleware/       # Middleware
-│   └── Providers/        # Providers
+│   └── .../              # Autres dossiers
 ├── config/                # Fichiers de configuration
+├── boostrap/              # Fichiers de booststrap
 ├── database/              # Migrations et seeders
 ├── public/                # Point d'entrée public
 ├── resources/             # Ressources (vues, assets)
 ├── routes/                # Définition des routes
-├── src/                   # Code source du framework
 ├── storage/               # Fichiers générés
 ├── tests/                 # Tests unitaires et fonctionnels
 └── vendor/                # Dépendances
