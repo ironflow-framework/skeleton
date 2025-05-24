@@ -26,16 +26,8 @@
     }
   },
   "scripts": {
-    "setup-directories": [
-      "@php vendor/ironflow/framework/src/scripts/setup_directories.php"
-    ],
-    "run-npm-install": [
-      "bash vendor/ironflow/framework/scripts/run_npm_install.sh"
-    ],
     "post-create-project-cmd": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-      "@setup-directories",
-      "@run-npm-install"
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
   "test": "phpunit"
   },
