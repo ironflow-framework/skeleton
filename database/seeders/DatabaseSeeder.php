@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Database\seeders;
+namespace Database\Seeders;
 
 use Database\Factories\UserFactory;
 use IronFlow\Database\Seeders\Seeder;
@@ -31,13 +31,13 @@ class DatabaseSeeder extends Seeder
          $userFactory->make([
             'name' => 'Admin',
             'email' => 'admin@example.com',
-         ], 'admin');
+         ]);
 
          // Utilisateurs standards
          $userFactory->createMany(10);
 
          // Utilisateurs non vérifiés
-         $userFactory->createMany(5, [], 'unverified');
+         $userFactory->createMany(5, []);
 
          $seeders = [
             // UserSeeder::class,

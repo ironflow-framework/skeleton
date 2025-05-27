@@ -11,15 +11,16 @@ class User extends Model
 {
     use HasFactory;
     use HasForm;
-    protected $table = 'users';
+    
+    protected static string $table = 'users';
 
-    protected $fillable = [
+    protected array $fillable = [
       'name',
       'email',
       'password'
     ];
 
-    protected $casts = [
+    protected array $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];

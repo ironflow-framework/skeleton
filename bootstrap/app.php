@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-// require_once __DIR__ . '/../src/helpers.php'; // Remplacer par dirname(__DIR__, 2) . '/app/Helpers/helpers.php';
 require_once __DIR__ . '/../vendor/ironflow/framework/src/helpers.php';
 
 use IronFlow\Core\Application\Application;

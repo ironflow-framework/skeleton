@@ -11,7 +11,9 @@ class UserFactory extends Factory
 
     protected function configure(): void
     {
-        $this->states = [];
+        $this->states = [
+            
+        ];
     }
 
     public function definition(): array

@@ -10,7 +10,7 @@ class UserSeeder
     public function run(): void
     {
         // Seed 10 Users
-        User::factory(5)->create();
+        User::factory()->create();
 
         $factory = new UserFactory();
         $factory->createMany(5);
