@@ -7,14 +7,17 @@ use App\Models\User;
 
 class UserFactory extends Factory
 {
-    protected $model = User::class;
+    protected string $model = User::class;
+
+    protected function configure(): void
+    {
+        $this->states = [];
+    }
 
     public function definition(): array
     {
         return [
-            // 'first_name' => $this->faker->firstName(),
-            // 'last_name' => $this->faker->lastName(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'name' => $this->fake->word,
         ];
     }
 }

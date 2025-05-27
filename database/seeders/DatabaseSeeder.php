@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Database\Seeders;
+namespace Database\seeders;
 
-use Database\Seeders\CategorySeeder;
-use Database\Seeders\ProductSeeder;
 use Database\Factories\UserFactory;
 use IronFlow\Database\Seeders\Seeder;
 
@@ -42,8 +40,7 @@ class DatabaseSeeder extends Seeder
          $userFactory->createMany(5, [], 'unverified');
 
          $seeders = [
-            CategorySeeder::class,
-            ProductSeeder::class,
+            // UserSeeder::class,
          ];
 
          foreach ($seeders as $seeder) {

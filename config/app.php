@@ -21,7 +21,7 @@ return [
       'Route' => IronFlow\Routing\Router::class,
       'DB' => IronFlow\Database\Connection::class,
       'View' => IronFlow\View\TwigView::class,
-      'Cache' => IronFlow\Cache\Hammer\HammerManager::class,
+      'Cache' => IronFlow\Cache\CacheManager::class,
       'Translator' => IronFlow\Support\Facades\Trans::class,
    ],
 

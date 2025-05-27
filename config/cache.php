@@ -14,6 +14,15 @@ return [
       'redis' => [
          'driver' => 'redis',
          'connection' => 'cache',
+         'servers' => [
+            [
+               'host' => env('REDIS_HOST', '127.0.0.1'),
+               'port' => env('REDIS_PORT', 6379),
+               'password' => env('REDIS_PASSWORD', null),
+               'database' => 0,
+               'timeout' => 10,
+            ]
+         ],
          'lock_connection' => 'default',
       ],
 
@@ -37,5 +46,6 @@ return [
       ],
    ],
 
-   'prefix' => env('CACHE_PREFIX', 'ironflow_cache'),
+   'ttl' => 3600,
+   'prefix' => env('CACHE_PREFIX', 'ironflow_cache_'),
 ];
