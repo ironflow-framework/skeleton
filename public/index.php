@@ -1,137 +1,121 @@
 <?php
+// Fichier: public/index.php
+// Point d'entrée de l'application
 
 declare(strict_types=1);
 
-/**
- * Point d'entrée de l'application IronFlow
- * 
- * Ce fichier initialise l'environnement de l'application, charge les dépendances
- * et démarre l'application.
- * 
- * @author IronFlow Team
- * @version 1.0.0
- */
+require_once __DIR__ . '/../vendor/autoload.php';
 
-// Définition des constantes de démarrage pour mesurer les performances
-define('IRONFLOW_START', microtime(true));
-define('IRONFLOW_MEMORY_USAGE', memory_get_usage());
+use IronFlow\Core\IronKernel;
+use IronFlow\Core\Container\Container;
+use IronFlow\Core\Http\Request;
 
-// Vérification de la version de PHP
-const MINIMUM_PHP_VERSION = '8.1.0';
-if (version_compare(PHP_VERSION, MINIMUM_PHP_VERSION, '<')) {
-   throw new RuntimeException(sprintf(
-      'IronFlow nécessite PHP %s ou supérieur. Version actuelle : %s',
-      MINIMUM_PHP_VERSION,
-      PHP_VERSION
-   ));
-}
+// Créer le container DI
+$container = new Container();
 
-// Définition du chemin de base de l'application
-define('BASE_PATH', dirname(__DIR__));
+// Créer le kernel de l'application
+$kernel = new IronKernel($container);
 
-// Définition de la fonction helper base_path()
-if (!function_exists('base_path')) {
-   function base_path(string $path = ''): string
-   {
-      return BASE_PATH . ($path ? '/' . ltrim($path, '/') : '');
-   }
-}
+// Charger la configuration de l'application
+require_once __DIR__ . '/../bootstrap/app.php';
 
-// Chargement de l'autoloader de Composer
-require_once base_path('vendor/autoload.php');
+// Traiter la requête HTTP
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
 
-// Chargement des variables d'environnement
-$dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
-$dotenv->safeLoad();
+// Envoyer la réponse
+$response->send();
 
-// Configuration de l'environnement
-date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'UTC');
+// ---
 
-// Configuration du mode développement
-if ($_ENV['APP_ENV'] === 'development') {
-   error_reporting(E_ALL);
-   ini_set('display_errors', '1');
-   ini_set('log_errors', '1');
-   ini_set('error_log', BASE_PATH . '/storage/logs/php_errors.log');
-   ini_set('display_startup_errors', '1');
-   ini_set('track_errors', '1');
-   ini_set('html_errors', '1');
-   ini_set('docref_root', '');
-   ini_set('docref_ext', '.html');
+// Fichier: bootstrap/app.php
+// Configuration et initialisation de l'application
 
-   // Configuration du logging personnalisé
-   ini_set('error_prepend_string', '[' . date('Y-m-d H:i:s') . '] ');
-   ini_set('error_append_string', "\n");
+declare(strict_types=1);
 
-   // Test de logging
-   error_log("=== Démarrage de l'application ===");
-   error_log("PHP Version: " . PHP_VERSION);
-   error_log("Memory Limit: " . ini_get('memory_limit'));
-   error_log("Max Execution Time: " . ini_get('max_execution_time'));
-   error_log("Error Reporting: " . error_reporting());
-   error_log("Display Errors: " . ini_get('display_errors'));
-   error_log("Log Errors: " . ini_get('log_errors'));
-   error_log("Error Log: " . ini_get('error_log'));
-   error_log("================================\n");
-}
+use IronFlow\Core\Database\Model;
+use App\Modules\Blog\BlogModuleProvider;
+use App\Modules\Auth\AuthModuleProvider;
+use IronFlow\Core\Http\Middleware\CorsMiddleware;
+use IronFlow\Core\Http\Middleware\LoggingMiddleware;
 
-// Démarrage de la session
-if (session_status() === PHP_SESSION_NONE) {
-   session_start();
-}
+// Configuration de la base de données
+$dbConfig = require __DIR__ . '/../config/database.php';
+$pdo = new PDO(
+    $dbConfig['dsn'],
+    $dbConfig['username'],
+    $dbConfig['password'],
+    $dbConfig['options']
+);
 
-// Création du répertoire de logs si nécessaire
-if (!is_dir(base_path('storage/logs'))) {
-   mkdir(base_path('storage/logs'), 0755, true);
-}
+// Configurer l'ORM
+Model::setPdo($pdo);
 
-// Vérification des permissions du fichier de log
-$logFile = base_path('storage/logs/php_errors.log');
-if (!file_exists($logFile)) {
-   touch($logFile);
-}
-chmod($logFile, 0666);
+// Enregistrer les middleware globaux
+$kernel->addMiddleware(CorsMiddleware::class);
+$kernel->addMiddleware(LoggingMiddleware::class);
 
-try {
-   // Démarrage de l'application
-   error_log("Chargement de l'application...");
-   $app = require base_path('/bootstrap/app.php');
-   error_log("Application chargée, démarrage...");
-   $app->run();
-} catch (\Throwable $e) {
-   error_log("ERREUR CRITIQUE: " . $e->getMessage());
-   error_log("Fichier: " . $e->getFile() . ":" . $e->getLine());
-   error_log("Trace: " . $e->getTraceAsString());
+// Enregistrer les modules
+$kernel->registerModule(new BlogModuleProvider());
+$kernel->registerModule(new AuthModuleProvider());
 
-   // Gestion des erreurs non capturées
-   if (isset($app)) {
-      $response = $app->handleException($e);
-      $response->send();
-   } else {
-      // Fallback en cas d'erreur avant l'initialisation de l'application
-      http_response_code(500);
-      if ($_ENV['APP_ENV'] === 'development') {
-         echo sprintf(
-            "Une erreur est survenue : %s\n%s\n%s",
-            $e->getMessage(),
-            $e->getFile() . ':' . $e->getLine(),
-            $e->getTraceAsString()
-         );
-      } else {
-         echo "Une erreur est survenue. Veuillez réessayer plus tard.";
-      }
-   }
-   exit(1);
-}
+// Charger les routes globales
+$kernel->getRouter()->loadRoutes(__DIR__ . '/../routes/web.php');
 
-// Affichage des métriques de performance en mode debug
-if (filter_var($_ENV['APP_DEBUG'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
-   $executionTime = number_format((microtime(true) - IRONFLOW_START) * 1000, 2);
-   $memoryUsage = number_format((memory_get_usage() - IRONFLOW_MEMORY_USAGE) / 1024 / 1024, 2);
+// ---
 
-   printf(
-      "\n<!-- Temps d'exécution: %s ms | Mémoire utilisée: %s MB -->",
-      $executionTime,
-      $memoryUsage
-   );
-}
+// Fichier: config/app.php
+// Configuration principale de l'application
+
+return [
+    'name' => env('APP_NAME', 'IronFlow App'),
+    'env' => env('APP_ENV', 'production'),
+    'debug' => env('APP_DEBUG', false),
+    'url' => env('APP_URL', 'http://localhost'),
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    
+    'providers' => [
+        App\Providers\AppServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
+    ],
+];
+
+// ---
+
+// Fichier: config/database.php
+// Configuration de la base de données
+
+return [
+    'default' => env('DB_CONNECTION', 'mysql'),
+    
+    'connections' => [
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'ironflow'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+        ],
+        
+        'sqlite' => [
+            'driver' => 'sqlite',
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+        ],
+    ],
+    
+    // Configuration PDO directe pour l'exemple
+    'dsn' => env('DB_CONNECTION', 'mysql') === 'sqlite' 
+        ? 'sqlite:' . (__DIR__ . '/../database/database.sqlite')
+        : 'mysql:host=' . env('DB_HOST', '127.0.0.1') . ';dbname=' . env('DB_DATABASE', 'ironflow'),
+    'username' => env('DB_USERNAME', 'root'),
+    'password' => env('DB_PASSWORD', ''),
+    'options' => [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ],
+];
+

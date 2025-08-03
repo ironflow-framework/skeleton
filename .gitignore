@@ -1,18 +1,4 @@
+# IronFlow Skeleton
 /vendor/
-/node_modules/
+/storage/
 .env
-.phpunit.result.cache
-/storage/*
-/storage/cache/*
-/cache/*
-!/cache/.gitkeep
-/logs/*
-!/logs/.gitkeep
-/public/uploads/*
-!/public/uploads/.gitkeep
-.idea/
-.vscode/
-*.log
-.DS_Store
-Thumbs.db
-/public/build 
