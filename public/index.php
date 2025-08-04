@@ -10,12 +10,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-$kernel = $app->make(\IronFlow\Core\Http\Kernel::class);
-
-$response = $kernel->handle(
+$response = $app->handle(
     $request = Request::createFromGlobals()
 );
 
 $response->send();
 
-$kernel->terminate($request, $response);
+$app->terminate($request, $response);
