@@ -6,10 +6,11 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
-use IronFlow\Console\Kernel;
+use IronFlow\Core\Console\Kernel;
+use IronFlow\Core\Container\Container;
 
-$kernel = new Kernel();
+$kernel = new Kernel(new Container());
 
 exit($kernel->handle());
