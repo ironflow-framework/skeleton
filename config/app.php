@@ -12,8 +12,5 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
     'timezone' => env('APP_TIMEZONE', 'UTC'),
     
-    'providers' => [
-        App\Providers\AppServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-    ],
+    'providers' => require __DIR__ .'/../bootstrap/providers.php',
 ];
